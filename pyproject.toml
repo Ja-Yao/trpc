@@ -17,9 +17,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-depedencies = [
-    "libemg",
+dependencies = [
+    "libemg"
 ]
 
 [tool.setuptools.packages.find]
 include = ["trpc", "trpc.*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py38"]
