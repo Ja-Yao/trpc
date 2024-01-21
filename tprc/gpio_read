@@ -3,9 +3,9 @@ import time
 
 #choose our input pin for 1 channel
 inputPin1 = 0
-inputPin2 = 0
-inputPin3 = 0
-inputPin4 = 0
+inputPin2 = 1
+inputPin3 = 2
+inputPin4 = 3
 
 #pins are decided by what number is physcially on board
 GPIO.setmode(GPIO.BOARD)
@@ -16,3 +16,15 @@ GPIO.setup(inputPin2, GPIO.IN)
 GPIO.setup(inputPin3, GPIO.IN)
 GPIO.setup(inputPin4, GPIO.IN)
 
+#timing variables
+adcSamp = 0 
+running = 1 #forever while loop
+wait = 1/adcSamp
+
+while running == 1:
+    input1 = GPIO.input(inputPin1)
+    input2 = GPIO.input(inputPin2)
+    input3 = GPIO.input(inputPin3)
+    input4 = GPIO.input(inputPin4)
+    time.sleep(wait)
+    
