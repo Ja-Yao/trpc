@@ -1,0 +1,18 @@
+import RPi.GPIO as GPIO
+import time
+
+#choose our input pin for 1 channel
+inputPin1 = 0
+inputPin2 = 0
+inputPin3 = 0
+inputPin4 = 0
+
+#pins are decided by what number is physcially on board
+GPIO.setmode(GPIO.BOARD)
+
+#sets chosen input pins as inputs 
+GPIO.setup(inputPin1, GPIO.IN)
+GPIO.setup(inputPin2, GPIO.IN)
+GPIO.setup(inputPin3, GPIO.IN)
+GPIO.setup(inputPin4, GPIO.IN)
+
