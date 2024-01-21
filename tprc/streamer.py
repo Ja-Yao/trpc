@@ -1,5 +1,6 @@
 import socket
 import pickle
+from typing import Optional
 
 
 class Streamer:
@@ -7,16 +8,16 @@ class Streamer:
     def __init__(self) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    def write_to_socket(self, emg, movement):
-        """
-        Writes data to socket
+    def write_to_socket(self, emg, movement: Optional[int] = None):
+        """Writes data to socket. On every sample, we pickle the data and send it to the socket.
         
-        :param emg: EMG data
-        :param movement: Movement data
+        Args:
+            emg: EMG data to write
+            movement: Movement data
         """
         data_arr = pickle.dumps((emg, movement))
-        self.socket.send(data_arr, ())
+        self.socket.sendto(data_arr, ('127.0.0.1', 12345))
 
     def close_socket(self):
-        """Closes socket"""
+        """Closes the socket"""
         self.socket.close()
