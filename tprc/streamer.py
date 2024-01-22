@@ -10,7 +10,10 @@ class Streamer:
     def __init__(self) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    def setup(self):
+        self.channelNum = None
+        self.pins = []
+
+    def setup_board(self):
         GPIO.setmode(GPIO.BOARD)
         self.channelNum = input("Select number of desired channels:")
 
