@@ -32,7 +32,7 @@ class Streamer:
         #inputs for reading input[pin][samples]
         inputs = [[0] * (2 * adcSamp) for _ in range(self.channelNum)] #2 cycles per function call
 
-        while running == True:
+        #while running == True:
         #read the value of the pin and write to the input array 
         for j in range(len(2*adcSamp))
             for i in range(len(self.channelNum)):
