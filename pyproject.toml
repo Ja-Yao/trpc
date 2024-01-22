@@ -18,7 +18,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "libemg"
+    "libemg",
+    "PyWavelets",
+    "bluepy"
 ]
 
 [tool.setuptools.packages.find]
