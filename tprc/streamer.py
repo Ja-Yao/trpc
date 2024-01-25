@@ -33,16 +33,20 @@ class Streamer:
     def read_GPIO(self):
         adcSamp = 0 #to be edited when found
         wait = 1/adcSamp
+        num_sample = 0
 
         #inputs for reading input[pin]
-        emg = []
+        emg = [[0]*self.num_channels] * num_sample
     
         #while running == True:
         #array of dictionary 
         #create json string 
         #read the value of the pin and write to the input array 
-        for i in range(len(self.num_channels)):
-           emg[i] = GPIO.input(self.pins[i])
+        for j in range(len(num_sample)):
+            for i in range(len(self.num_channels)):
+                emg[i] = GPIO.input(self.pins[i])
+                
+        return emg
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         """Writes data to socket. On every sample, we pickle the data and send it to the socket.
