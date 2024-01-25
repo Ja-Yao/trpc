@@ -30,6 +30,19 @@ class Streamer:
         for i in range(len(self.num_channels)):
           GPIO.setup(self.pins[i], GPIO.IN)
 
+    def read_GPIO(self):
+        adcSamp = 0 #to be edited when found
+        wait = 1/adcSamp
+
+        #inputs for reading input[pin]
+        emg = []
+    
+        #while running == True:
+        #array of dictionary 
+        #create json string 
+        #read the value of the pin and write to the input array 
+        for i in range(len(self.num_channels)):
+           emg[i] = GPIO.input(self.pins[i])
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         """Writes data to socket. On every sample, we pickle the data and send it to the socket.
@@ -38,23 +51,9 @@ class Streamer:
             emg: EMG data to write
             movement: Movement data
         """
-        adcSamp = 0 #to be edited when found
-        running = True #forever while loop for streaming
-        wait = 1/adcSamp
+        
 
-        #inputs for reading input[pin]
-        emg = {}
-
-        #while running == True:
-        #array of dictionary 
-        #create json string 
-        #read the value of the pin and write to the input array 
-        for i in range(len(self.num_channels)):
-             emg[i] = GPIO.input[pin[i]]
-         
-
-
-        data_arr = pickle.dumps((emg, movement))
+        data_arr = pickle.dumps((emg))
         self.socket.sendto(data_arr, ('127.0.0.1', 12345))
 
     def close_socket(self):
