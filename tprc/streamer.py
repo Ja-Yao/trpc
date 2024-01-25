@@ -20,7 +20,8 @@ class Streamer:
         self.pins = [num_channels]
 
     def setup_board(self):
-        GPIO.setmode(GPIO.BOARD) #number closen for pins correlates directly w number on board
+        """initialize board from self and sets fixed pins from self as inputs"""
+        GPIO.setmode(GPIO.BCM) #number closen for pins correlates directly w GPIO number on board
 
         pinNum_long = int(input("Select desired pin numbers (seperate w spaces):"))
         self.pins = [int(pin) for pin in pinNum_long.split()]
