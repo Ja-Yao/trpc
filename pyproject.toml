@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
     "libemg",
     "PyWavelets",
-    "bluepy"
+    "bluepy",
     "RPi.GPIO"
 ]
 
