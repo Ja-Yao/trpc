@@ -27,7 +27,7 @@ class Streamer:
         self.pins = [int(pin) for pin in pinNum_long.split()]
 
 
-        for i in range(len(self.num_channels)):
+        for i in range(self.num_channels)
           GPIO.setup(self.pins[i], GPIO.IN)
 
     def read_GPIO(self):
@@ -42,9 +42,8 @@ class Streamer:
         #array of dictionary 
         #create json string 
         #read the value of the pin and write to the input array 
-        for j in range(len(num_sample)):
-            for i in range(len(self.num_channels)):
-                emg[i] = GPIO.input(self.pins[i])
+        for i in range(self.num_channels):
+            emg[i] = GPIO.input(self.pins[i])
                 
         return emg
 
