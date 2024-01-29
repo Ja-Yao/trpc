@@ -22,12 +22,13 @@ class TRPCProcessor:
     """
 
     def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS4",
-                 model: str = "SVM", classifier_path: Optional[str] = "classifiers/svm.pickle") -> None:
+                 model: str = "SVM", classifier_path: Optional[str] = None) -> None:
         self.__window_size = window_size
         self.__window_increment = window_increment
         self.feature_set = feature_set
         self.model = model
-        self.classifier_path = classifier_path
+        if classifier_path is None:
+            self.classifier_path = "classifiers/svm.pickle"
         
         # The handler listens to UDP port 12345 by default, with ip address 127.0.0.1.
         # No need to specify these parameters unless we need to change them.
