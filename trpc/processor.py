@@ -98,5 +98,4 @@ class TRPCProcessor:
     def close(self) -> None:
         """Closes the processor"""
         self.odh.stop_listening()
-        if self.classifier is not None:
-            self.classifier.stop_running()
+        self.classifier.stop_running()
