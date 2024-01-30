@@ -1,6 +1,6 @@
 import socket
 import pickle
-from gpiozero import RPiGPIOPin as GPIO
+from gpiozero.pins.rpigpio import RPiGPIOPin as GPIO
 import time
 from typing import Optional
 
