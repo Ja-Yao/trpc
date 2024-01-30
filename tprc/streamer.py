@@ -31,17 +31,10 @@ class Streamer:
           GPIO.setup(self.pins[i], GPIO.IN)
 
     def read_GPIO(self):
-        adcSamp = 0 #to be edited when found
-        wait = 1/adcSamp
-        num_sample = 0
+        #list for read signals
+        emg = [[0]*self.num_channels]
 
-        #inputs for reading input[pin]
-        emg = [[0]*self.num_channels] * num_sample
-    
-        #while running == True:
-        #array of dictionary 
-        #create json string 
-        #read the value of the pin and write to the input array 
+        #for reading inputs and set into emg list 
         for i in range(self.num_channels):
             emg[i] = GPIO.input(self.pins[i])
                 
