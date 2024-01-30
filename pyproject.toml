@@ -21,7 +21,7 @@ dependencies = [
     "libemg",
     "PyWavelets",
     "bluepy",
-    "gpiozero"
+    "gpiozero",
 ]
 
 [tool.setuptools.packages.find]
