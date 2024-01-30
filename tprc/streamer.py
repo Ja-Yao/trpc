@@ -1,6 +1,6 @@
 import socket
 import pickle
-from gpiozeroo import DigitalInputDevice
+from gpiozero import DigitalInputDevice as GPIO
 import time
 from typing import Optional
 
