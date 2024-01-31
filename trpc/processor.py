@@ -6,7 +6,9 @@ from libemg.data_handler import OnlineDataHandler, OfflineDataHandler
 from libemg.feature_extractor import FeatureExtractor
 from libemg.emg_classifier import EMGClassifier, OnlineEMGClassifier
 from libemg.utils import make_regex
+from .utils.logger import get_logger
 
+logger = get_logger(__name__)
 
 class TRPCProcessor:
     """Class for processing data from a device to the LibEMG pipeline
@@ -44,9 +46,9 @@ class TRPCProcessor:
 
         try:
             emg = EMGClassifier.from_file(self.classifier_path)
-            print("Loaded classifier from file")
+            logger.info("Loaded classifier from file")
         except FileNotFoundError:
-            print("Classifier not found. Training classifier from scratch...")
+            logger.info("Classifier not found. Training classifier from scratch...")
             # Step 1: Parse training data
             classes_values = ["0", "1", "2", "3", "4"]
             classes_regex = make_regex(left_bound="_C_", right_bound=".csv", values=classes_values)

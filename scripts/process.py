@@ -4,9 +4,13 @@ import datetime
 from os.path import exists
 from libemg.datasets import OneSubjectMyoDataset
 from trpc import TRPCProcessor
+from trpc.utils.logger import get_logger
 
+
+logger = get_logger(__name__)
 
 def handle_close(p: TRPCProcessor, s: socket.socket):
+    logger.info("Shutting down processor...")
     p.close()
     s.close()
 
@@ -14,7 +18,7 @@ def handle_close(p: TRPCProcessor, s: socket.socket):
 if __name__ == "__main__":
     if not exists("data/OneSubjectMyoDataset"):
         # Download the data if it doesn't exist
-        print("Downloading data...")
+        logger.info("Downloading data...")
         dataset = OneSubjectMyoDataset(save_dir="data", redownload=False)
 
     classes = {0: "Hand Open", 1: "Hand Close", 2: "No Movement", 3: "Wrist Extension", 4: "Wrist Flexion"}
@@ -27,16 +31,8 @@ if __name__ == "__main__":
             data, addr = sock.recvfrom(1024)  # Receive up to 1024 bytes
             gesture_class, prob = data.decode().split()  # Decode the received bytes
             try:
-                print({
-                    "class": classes[int(gesture_class)],
-                    "confidence": f"{round(float(prob) * 100, 2)}%",
-                    "timestamp": datetime.datetime.now().strftime("%F %T.%f")[:-3]
-                })
+                logger.info({ "class": classes[int(gesture_class)], "confidence": f"{round(float(prob) * 100, 2)}%" })
             except KeyError:
-                print({
-                    "class": "Unknown",
-                    "confidence": "100.0%",
-                    "timestamp": datetime.datetime.now().strftime("%F %T.%f")[:-3]
-                })
+                logger.info({ "class": "Unknown", "confidence": "100.0%" })
     except KeyboardInterrupt:
         handle_close(processor, sock)
