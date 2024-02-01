@@ -1,4 +1,5 @@
 from gpiozero import Servo
+from gpiozero.pins.rpigpio import RPiGPIOFactory
 from typing import Dict
 from trpc.utils.logger import get_logger
 
@@ -16,7 +17,7 @@ class Driver:
     def __init__(self, servo_pins: Dict[str, int], gestures: Dict[int, Dict[str, int | str]]):
         self.__servo_pins = servo_pins
         self.__gestures = gestures
-        self.__servos = {servo: Servo(pin) for servo, pin in self.__servo_pins.items()}
+        self.__servos = {servo: Servo(pin=pin, pin_factory=RPiGPIOFactory()) for servo, pin in self.__servo_pins.items()}
 
     def execute_command(self, command: Dict[str, int | str]):
         """Sends the command to the given servo
@@ -31,8 +32,11 @@ class Driver:
 
         if servo is not None:
             if value == 0:
+                logger.info("Returning to mid position")
                 servo.mid()
             elif value == 1:
+                logger.info("Moving to max position")
                 servo.max()
             elif value == -1:
+                logger.info("Moving to min position")
                 servo.min()

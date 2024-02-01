@@ -15,9 +15,9 @@ class Controller:
             pins: Dictionary of servo number and corresponding pins
     """
 
-    def __init__(self, port: str = "12346", ip_address: str = "127.0.0.1", 
+    def __init__(self, streamer, classifier, port: int = 12346, ip_address: str = "127.0.0.1", 
                  gestures: Dict[int, Dict[str, int | str]] = {}, pins: Dict[str, int] = {}):
-        from trpc import TRPCProcessor, Driver, Streamer
+        from trpc import Driver
         if not gestures:
             gestures = {
                 0: {
@@ -46,10 +46,9 @@ class Controller:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((self.ip_address, self.port))
         self.gestures = gestures
-        self.pins = pins
-        self.streamer = Streamer()
-        self.classifier = TRPCProcessor(model="SVM")
-        self.driver = Driver(servo_pins=self.pins, gestures=self.gestures)
+        self.streamer = streamer
+        self.classifier = classifier
+        self.driver = Driver(servo_pins=pins, gestures=self.gestures)
 
     def start(self):
         """Runs the controller"""
