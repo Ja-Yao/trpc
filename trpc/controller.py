@@ -1,7 +1,6 @@
 import socket
 
 from typing import Dict
-from trpc import TRPCProcessor, Driver, Streamer
 
 
 class Controller:
@@ -18,6 +17,7 @@ class Controller:
 
     def __init__(self, port: str = "12346", ip_address: str = "127.0.0.1", 
                  gestures: Dict[int, Dict[str, int | str]] = {}, pins: Dict[str, int] = {}):
+        from trpc import TRPCProcessor, Driver, Streamer
         if not gestures:
             gestures = {
                 0: {
