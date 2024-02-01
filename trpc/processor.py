@@ -6,7 +6,7 @@ from libemg.data_handler import OnlineDataHandler, OfflineDataHandler
 from libemg.feature_extractor import FeatureExtractor
 from libemg.emg_classifier import EMGClassifier, OnlineEMGClassifier
 from libemg.utils import make_regex
-from .utils.logger import get_logger
+from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
