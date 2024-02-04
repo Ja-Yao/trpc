@@ -1,5 +1,5 @@
 from gpiozero import Servo
-from gpiozero.pins.rpigpio import RPiGPIOFactory
+from gpiozero.pins.pigpio import PiGPIOFactory
 from typing import Dict
 from trpc.utils.logger import get_logger
 
@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, servo_pins: Dict[str, int], gestures: Dict[int, Dict[str, int | str]]):
         self.__servo_pins = servo_pins
         self.__gestures = gestures
-        self.__servos = {servo: Servo(pin=pin, pin_factory=RPiGPIOFactory()) for servo, pin in self.__servo_pins.items()}
+        self.__servos = {servo: Servo(pin=pin, pin_factory=PiGPIOFactory(host="127.0.1.1")) for servo, pin in self.__servo_pins.items()}
 
     def execute_command(self, command: Dict[str, int | str]):
         """Sends the command to the given servo
