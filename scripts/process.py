@@ -29,7 +29,7 @@ if __name__ == "__main__":
         processor.run()
         while True:
             data, addr = sock.recvfrom(1024)  # Receive up to 1024 bytes
-            gesture_class, prob = data.decode().split()  # Decode the received bytes
+            gesture_class, prob, timestamp = data.decode().split()  # Decode the received bytes
             try:
                 logger.info({ "class": classes[int(gesture_class)], "confidence": f"{round(float(prob) * 100, 2)}%" })
             except KeyError:
