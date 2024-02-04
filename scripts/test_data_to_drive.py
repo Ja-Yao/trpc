@@ -1,5 +1,4 @@
 from os.path import exists
-import socket
 from time import sleep
 from libemg.datasets import OneSubjectMyoDataset
 from libemg.streamers import mock_emg_stream
