@@ -35,7 +35,7 @@ class Streamer:
         SDA = 0b1001010
         SCL = 0b1001011
         
-        #1 = write / 0 = read
+        #0 = recieve / 1 = transmit 
         rw = 1
         
         #register location for pointer registers
@@ -51,6 +51,30 @@ class Streamer:
         i2c_write_byte(handle, (SCL << 1) | rw)
         #writes to address pointer register to choose future byte writing
         i2c_write_byte(handle, config)
+        
+        return handle
+        
+    def threaded_mux_selector(handle):
+        """flips through mux inputs
+        
+        Args:
+            handle: device #
+        
+        """
+        
+      
+        #14:12 = MUX configuration
+        #8 = conversion mode 
+        #7:5 = Data rate = 128sps default        
+        
+        A0 = 0b0100 0000 1000 0000
+        A1 = 0b0101 0000 1000 0000
+        A2 = 0b0110 0000 1000 0000
+        A0 = 0b0111 0000 1000 0000
+        
+        
+        
+        
         
         
 
