@@ -19,26 +19,40 @@ class Streamer:
         self.num_channels = num_channels
         self.pins = [num_channels]
 
-    def setup_board(self):
-        """initialize board from self and sets fixed pins from self as inputs"""
-        GPIO.setmode(GPIO.BCM) #number closen for pins correlates directly w GPIO number on board
-
-        pinNum_long = int(input("Select desired pin numbers (seperate w spaces):"))
-        self.pins = [int(pin) for pin in pinNum_long.split()]
-
-
-        for i in range(self.num_channels)
-          GPIO.setup(self.pins[i], GPIO.IN)
-
-    def read_GPIO(self):
-        #list for read signals
-        emg = [[0]*self.num_channels]
-
-        #for reading inputs and set into emg list 
-        for i in range(self.num_channels):
-            emg[i] = GPIO.input(self.pins[i])
-                
-        return emg
+    def setup_i2c(i2c_addr, i2c_bus):
+        """Setups i2c communications with ADC
+        
+        Args:
+            i2c_addr: address of ADC
+            i2c_bus: i2c bus number? (on pi?)
+        
+        """
+        i2c_flags = 0 # no flags defined currently
+        
+        #pin registers
+        GND = 0b1001000
+        VDD = 0b1001001
+        SDA = 0b1001010
+        SCL = 0b1001011
+        
+        #1 = write / 0 = read
+        rw = 1
+        
+        #register location for pointer registers
+        conversion = 0x00
+        config = 0x01
+        lowthresh = 0x02
+        highthresh = 0x03
+    
+        
+        handle = i2c_open(i2c_bus, i2c_addr, i2c_flags)
+        
+        #writes the desired pin register to the i2c
+        i2c_write_byte(handle, (SCL << 1) | rw)
+        #writes to address pointer register to choose future byte writing
+        i2c_write_byte(handle, config)
+        
+        
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         """Writes data to socket. On every sample, we pickle the data and send it to the socket.
