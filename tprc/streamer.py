@@ -62,15 +62,18 @@ class Streamer:
         
         """
         
-      
+        #pg 28 of ADS111x datasheet 
+        
         #14:12 = MUX configuration
         #8 = conversion mode 
-        #7:5 = Data rate = 128sps default        
+        #7:5 = Data rate = 128sps default     
         
-        A0 = 0b0100 0000 1000 0000
-        A1 = 0b0101 0000 1000 0000
-        A2 = 0b0110 0000 1000 0000
-        A0 = 0b0111 0000 1000 0000
+        # starts in state A0   
+       
+        A1 = 0x5080     #0101 0000 1000 0000
+        A2 = 0x6080     #0110 0000 1000 0000
+        A3 = 0x7080     #0111 0000 1000 0000
+        A0 = 0x4080     #0100 0000 1000 0000 #default state
         
         
         
