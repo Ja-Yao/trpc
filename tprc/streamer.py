@@ -48,7 +48,7 @@ class Streamer:
         handle = i2c_open(i2c_bus, i2c_addr, i2c_flags)
         
         #writes the desired pin register to the i2c
-        i2c_write_byte(handle, (SCL << 1) | rw)
+        i2c_write_byte_data(handle, (SCL << 1) | rw)
         #writes to address pointer register to choose future byte writing
         i2c_write_byte(handle, config)
         
@@ -74,8 +74,17 @@ class Streamer:
         A2 = 0x6080     #0110 0000 1000 0000
         A3 = 0x7080     #0111 0000 1000 0000
         A0 = 0x4080     #0100 0000 1000 0000 #default state
+    
+        states = [A1, A2, A3, A0]
         
+        #looping variable
+        i = 0
         
+        for i in range(4):
+            i2c_write_word_data(handle, reg, states[i])
+            i += 1
+            
+     
         
         
         
