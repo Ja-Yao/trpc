@@ -19,9 +19,13 @@ classifiers = [
 ]
 dependencies = [
     "libemg",
+]
+
+[project.optional-dependencies]
+dev = [
     "PyWavelets",
     "bluepy",
-    "gpiozero",
+    "alive-progress",
 ]
 
 [tool.setuptools.packages.find]
