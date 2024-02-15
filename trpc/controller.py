@@ -1,4 +1,5 @@
 import socket
+import pigpio
 
 from typing import Dict
 from trpc.utils.logger import get_logger
@@ -42,6 +43,7 @@ class Controller:
             # These are arbitrary pin values. They should be replaced with the actual pin values
             pins = {"Servo 1": 17, "Servo 2": 18, "Servo 3": 19, "Servo 4": 20, "Servo 5": 21, "Servo 6": 22}
 
+        pigpio.pi()
         self._port = port
         self._ip_address = ip_address
         self._classifier_output_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
