@@ -15,32 +15,32 @@ class Driver:
             gestures: Dictionary of gesture number and corresponding command
     """
     def __init__(self, servo_pins: Dict[str, int], gestures: Dict[int, Dict[str, int | str]]):
-        self.servo_pins = servo_pins
-        self.gestures = gestures
+        self._servo_pins = servo_pins
+        self._gestures = gestures
         
         pin_factory=PiGPIOFactory()
-        self.servos = {servo: Servo(pin, pin_factory) for servo, pin in self.servo_pins.items()}
-        self.state = "No Movement"
+        self._servos = {servo: Servo(pin, pin_factory) for servo, pin in self._servo_pins.items()}
+        self._state = "No Movement"
 
     @property
     def servo_pins(self):
-        return self.servo_pins
+        return self._servo_pins
     
     @servo_pins.setter
     def servo_pins(self, value):
         if not isinstance(value, dict):
             raise ValueError(f"Invalid servo_pins: {value}")
-        self.servo_pins = value
+        self._servo_pins = value
 
     @property
     def state(self):
-        return self.state
+        return self._state
     
     @state.setter
     def state(self, value):
-        if value not in self.gestures.values():
+        if value not in self._gestures.values():
             raise ValueError(f"Invalid state: {value}")
-        self.state = value       
+        self._state = value       
 
     def execute_command(self, command: Dict[str, int | str]):
         """Sends the command to the given servo
@@ -49,10 +49,10 @@ class Driver:
                 command: The command to be sent to the servo
         """
         gesture = command.get("gesture")
-        servo = self.servos.get(f"Servo {command.get('servo')}")  # Convert the key to a string
+        servo = self._servos.get(f"Servo {command.get('servo')}")  # Convert the key to a string
         value = command.get("value")
 
-        if gesture == self.state:
+        if gesture == self._state:
             logger.info("No change since last command")
             return
 
@@ -67,12 +67,12 @@ class Driver:
                 logger.info("Moving to min position")
                 servo.min()
             
-            self.state = gesture
+            self._state = gesture
         except:
             logger.error(f"Invalid or unknown command: {command}")
 
     def disconnect_pins(self):
         """Disconnects the pins and the servos"""
-        for servo in self.servos.values():
+        for servo in self._servos.values():
             servo.close()
         logger.info("Disconnected pins")

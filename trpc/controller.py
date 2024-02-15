@@ -42,81 +42,81 @@ class Controller:
             # These are arbitrary pin values. They should be replaced with the actual pin values
             pins = {"Servo 1": 17, "Servo 2": 18, "Servo 3": 19, "Servo 4": 20, "Servo 5": 21, "Servo 6": 22}
 
-        self.port = port
-        self.ip_address = ip_address
-        self.classifier_output_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.classifier_output_socket.bind((self.ip_address, self.port))
-        self.gestures = gestures
-        self.streamer = streamer
-        self.classifier = classifier
-        self.driver = Driver(servo_pins=pins, gestures=self.gestures)
+        self._port = port
+        self._ip_address = ip_address
+        self._classifier_output_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._classifier_output_socket.bind((self._ip_address, self._port))
+        self._gestures = gestures
+        self._streamer = streamer
+        self._classifier = classifier
+        self._driver = Driver(servo_pins=pins, gestures=self._gestures)
 
     @property
     def port(self):
-        return self.port
+        return self._port
     
     @port.setter
     def port(self, value):
         if not isinstance(value, int):
             raise ValueError("Port must be an integer")
-        self.port = value
+        self._port = value
 
     @property
     def ip_address(self):
-        return self.ip_address
+        return self._ip_address
     
     @ip_address.setter
     def ip_address(self, value):
         if not isinstance(value, str):
             raise ValueError("IP address must be a string")
-        self.ip_address = value
+        self._ip_address = value
 
     @property
     def gestures(self):
-        return self.gestures
+        return self._gestures
     
     @gestures.setter
     def gestures(self, value):
         if not isinstance(value, dict):
             raise ValueError("Gestures must be a dictionary")
-        self.gestures = value
+        self._gestures = value
 
     @property
     def streamer(self):
-        return self.streamer
+        return self._streamer
     
     @streamer.setter
     def streamer(self, value):
         if not isinstance(value, Streamer):
             raise ValueError("Streamer must be a Streamer object")
-        self.streamer = value
+        self._streamer = value
 
     @property
     def classifier(self):
-        return self.classifier
+        return self._classifier
     
     @classifier.setter
     def classifier(self, value):
         if not isinstance(value, TRPCProcessor):
             raise ValueError("Classifier must be a TRPCProcessor object")
-        self.classifier = value
+        self._classifier = value
 
     @property
     def driver(self):
-        return self.driver
+        return self._driver
     
     @driver.setter
     def driver(self, value):
         from trpc import Driver
         if not isinstance(value, Driver):
             raise ValueError("Driver must be a Driver object")
-        self.driver = value
+        self._driver = value
 
     def start(self):
         """Runs the startup process for the controller. This includes starting the streamer and the classifier."""
         # TODO: Have streamer run in a separate process
-        self.streamer.run()
-        self.classifier.run()
+        self._streamer.run()
+        self._classifier.run()
         logger.info("Controller started")
 
     def listen(self):
@@ -124,16 +124,16 @@ class Controller:
         logger.info("Running controller")
         while True:
             try:
-                data, addr = self.classifier_output_socket.recvfrom(1024)  # Receive up to 1024 bytes
+                data, addr = self._classifier_output_socket.recvfrom(1024)  # Receive up to 1024 bytes
                 gesture_class, prob, timestamp = data.decode().split()  # Decode the received bytes
-                if int(gesture_class) in self.gestures.keys():
-                    self.driver.execute_command(self.gestures[int(gesture_class)])
+                if int(gesture_class) in self._gestures.keys():
+                    self._driver.execute_command(self._gestures[int(gesture_class)])
             except KeyboardInterrupt:
-                self.stop()
+                self._stop()
                 logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
                 break
 
     def stop(self):
-        self.streamer.close_socket()
-        self.classifier.close()
-        self.streamer.close_socket()
+        self._streamer.close_socket()
+        self._classifier.close()
+        self._streamer.close_socket()
