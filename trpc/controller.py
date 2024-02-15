@@ -117,7 +117,7 @@ class Controller:
     def start(self):
         """Runs the startup process for the controller. This includes starting the streamer and the classifier."""
         # TODO: Have streamer run in a separate process
-        self._streamer.run()
+        # self._streamer.run()
         self._classifier.run()
         logger.info("Controller started")
 

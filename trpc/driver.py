@@ -1,4 +1,4 @@
-from gpiozero import Servo
+from gpiozero import Servo, AngularServo
 from gpiozero.pins.pigpio import PiGPIOFactory
 from typing import Dict
 from trpc.utils.logger import get_logger
@@ -18,8 +18,8 @@ class Driver:
         self._servo_pins = servo_pins
         self._gestures = gestures
         
-        pin_factory=PiGPIOFactory()
-        self._servos = {servo: Servo(pin, pin_factory) for servo, pin in self._servo_pins.items()}
+        pin_factory = PiGPIOFactory()
+        self._servos = {servo: AngularServo(pin=pin, pin_factory=pin_factory, min_angle=0, max_angle=180) for servo, pin in self._servo_pins.items()}
         self._state = "No Movement"
 
     @property
