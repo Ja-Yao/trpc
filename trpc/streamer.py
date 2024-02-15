@@ -19,7 +19,7 @@ class Streamer:
         self.num_channels = num_channels
         self.pins = [num_channels]
 
-    def setup_i2c(i2c_addr, i2c_bus):
+    def setup_i2c(i2c_addr, i2c_bus, self):
         """Setups i2c communications with ADC
         
         Args:
@@ -54,7 +54,7 @@ class Streamer:
         
         return handle
         
-    def threaded_mux_selector(handle):
+    def threaded_mux_selector(handle, self):
         """flips through mux inputs
         
         Args:
