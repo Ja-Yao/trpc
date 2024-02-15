@@ -16,10 +16,20 @@ if __name__ == "__main__":
         # Download the data if it doesn't exist
         logger.info("Downloading data...")
         dataset = OneSubjectMyoDataset(save_dir="data", redownload=False)
-
     subprocess.run(["sudo", "pigpiod"])
     controller = Controller(streamer=Streamer(), classifier=TRPCProcessor(model="SVM"))
-    controller.start()
-    controller.listen()
-    subprocess.run(["sudo", "killall", "pigpiod"])
-    
+
+    try:
+        controller.start()
+        controller.listen()
+        mock_emg_stream(file_path="data/OneSubjectMyoDataset/stream/raw_emg.csv", num_channels=8, sampling_rate=200)
+        sleep(5)
+        controller.stop()
+        subprocess.run(["sudo", "killall", "pigpiod"])
+        logger.info("Done.")
+    except KeyboardInterrupt:
+        controller.stop()
+        subprocess.run(["sudo", "killall", "pigpiod"])
+        logger.info("Controller stopped")
+        exit(0)
+        
