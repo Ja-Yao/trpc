@@ -2,7 +2,7 @@ import socket
 
 from typing import Dict
 from trpc.utils.logger import get_logger
-from trpc import Driver, Streamer, TRPCProcessor
+from trpc import Streamer, TRPCProcessor
 
 logger = get_logger(__name__)
 
@@ -107,6 +107,7 @@ class Controller:
     
     @driver.setter
     def driver(self, value):
+        from trpc import Driver
         if not isinstance(value, Driver):
             raise ValueError("Driver must be a Driver object")
         self.driver = value
