@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "libemg",
+    "pigpio",
 ]
 
 [project.optional-dependencies]

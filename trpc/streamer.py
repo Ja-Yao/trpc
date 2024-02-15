@@ -1,6 +1,6 @@
 import socket
 import pickle
-import gpiozero
+import pigpio
 import time
 from typing import Optional
 
