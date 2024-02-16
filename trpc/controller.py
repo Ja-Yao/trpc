@@ -27,21 +27,24 @@ class Controller:
             gestures = {
                 0: {
                     "gesture": "Hand Open",
+                    "servo": "Servo 1",
                     "value": 1
                 },
                 1: {
                     "gesture": "Hand Close",
+                    "servo": "Servo 1",
                     "value": -1
                 },
                 2: {
                     "gesture": "No Movement",
+                    "servo": "Servo 1",
                     "value": 0
                 }
             }
 
         if not pins:
             # These are arbitrary pin values. They should be replaced with the actual pin values
-            pins = {"Servo 1": 17, "Servo 2": 18, "Servo 3": 19, "Servo 4": 20, "Servo 5": 21, "Servo 6": 22}
+            pins = { "Servo 1": 17 }
 
         pigpio.pi()
         self._port = port

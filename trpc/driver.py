@@ -1,4 +1,4 @@
-from gpiozero import Servo, AngularServo
+from gpiozero import Servo
 from gpiozero.pins.pigpio import PiGPIOFactory
 from typing import Dict
 from trpc.utils.logger import get_logger
@@ -19,7 +19,7 @@ class Driver:
         self._gestures = gestures
         
         pin_factory = PiGPIOFactory()
-        self._servos = {servo: AngularServo(pin=pin, pin_factory=pin_factory, min_angle=0, max_angle=180) for servo, pin in self._servo_pins.items()}
+        self._servos = {servo: Servo(pin=pin, pin_factory=pin_factory) for servo, pin in self._servo_pins.items()}
         self._state = "No Movement"
 
     @property
@@ -49,7 +49,7 @@ class Driver:
                 command: The command to be sent to the servo
         """
         gesture = command.get("gesture")
-        servo = self._servos.get(f"Servo {command.get('servo')}")  # Convert the key to a string
+        servo = self._servos.get(command.get('servo'))
         value = command.get("value")
 
         if gesture == self._state:
