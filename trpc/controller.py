@@ -114,7 +114,7 @@ class Controller:
                 if int(gesture_class) in self._gestures.keys():
                     self._driver.execute_command(self._gestures[int(gesture_class)])
             except KeyboardInterrupt:
-                logger.info("\nDetected keyboard interrupt. Stopping controller and subordinates...")
+                logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
                 break
         
         self.stop()
