@@ -3,7 +3,7 @@ import pigpio
 
 from typing import Dict
 from trpc.utils.logger import get_logger
-from trpc import Streamer, TRPCProcessor
+from trpc import Streamer, Processor
 
 logger = get_logger(__name__)
 
@@ -20,7 +20,7 @@ class Controller:
             pins: Dictionary of servo number and corresponding pins
     """
 
-    def __init__(self, streamer: Streamer, classifier: TRPCProcessor, port: int = 12346, ip_address: str = "127.0.0.1", 
+    def __init__(self, streamer: Streamer, classifier: Processor, port: int = 12346, ip_address: str = "127.0.0.1", 
                  gestures: Dict[int, Dict[str, int | str]] = {}, pins: Dict[str, int] = {}):
         from trpc import TRPCDriver
         if not gestures:
@@ -112,9 +112,10 @@ class Controller:
                 if int(gesture_class) in self._gestures.keys():
                     self._driver.execute_command(self._gestures[int(gesture_class)])
             except KeyboardInterrupt:
-                logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
-                self.stop()
+                logger.info("\nDetected keyboard interrupt. Stopping controller and subordinates...")
                 break
+        
+        self.stop()
 
     def stop(self):
         self._streamer.close_socket()

@@ -3,7 +3,7 @@ from os.path import exists
 from time import sleep
 from libemg.datasets import OneSubjectMyoDataset
 from libemg.streamers import mock_emg_stream
-from trpc import Controller, Streamer, TRPCProcessor
+from trpc import Controller, TRPCStreamer, TRPCProcessor
 from trpc.utils.logger import get_logger
 
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
         logger.info("Downloading data...")
         dataset = OneSubjectMyoDataset(save_dir="data", redownload=False)
     subprocess.run(["sudo", "pigpiod"])
-    controller = Controller(streamer=Streamer(), classifier=TRPCProcessor(model="SVM"))
+    controller = Controller(streamer=TRPCStreamer(), classifier=TRPCProcessor(model="SVM"))
 
     try:
         controller.start()
