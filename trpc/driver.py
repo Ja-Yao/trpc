@@ -56,22 +56,16 @@ class TRPCDriver(Driver):
     def execute_command(self, command: Dict[str, int | str]):
         gesture = command.get("gesture")
         servo = self._servos.get(command.get('servo'))
-        value = command.get("value")
+        action = command.get("action")
 
         if gesture == self._state:
             return
 
         try:
-            if value == 0:
-                servo.max()
-            elif value == 1:
-                servo.min()
-            elif value == -1:
-                servo.mid()
-            
+            action(servo)
             self._state = gesture
-        except:
-            logger.error(f"Invalid or unknown command: {command}")
+        except Exception as e:
+            logger.error(f"Error executing command: {command}; {str(e)}")
 
     def disconnect_pins(self):
         for servo in self._servos.values():

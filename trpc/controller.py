@@ -1,12 +1,14 @@
 import socket
 import pigpio
 
-from typing import Dict
+from gpiozero import Servo
+from typing import Any, Dict
 from trpc.utils.logger import get_logger
 from trpc import Streamer, Processor
 
 logger = get_logger(__name__)
 
+SERVO_1_PIN = 17
 
 class Controller:
     """This class represents the controller for the robot arm assembly. It can read the classification from the
@@ -21,30 +23,30 @@ class Controller:
     """
 
     def __init__(self, streamer: Streamer, classifier: Processor, port: int = 12346, ip_address: str = "127.0.0.1", 
-                 gestures: Dict[int, Dict[str, int | str]] = {}, pins: Dict[str, int] = {}):
+                 gestures: Dict[int, Dict[str, Any]] = {}, pins: Dict[str, int] = {}):
         from trpc import TRPCDriver
         if not gestures:
             gestures = {
                 0: {
                     "gesture": "Hand Open",
                     "servo": "Servo 1",
-                    "value": 1
+                    "action": Servo.max
                 },
                 1: {
                     "gesture": "Hand Close",
                     "servo": "Servo 1",
-                    "value": -1
+                    "action": Servo.min
                 },
                 2: {
                     "gesture": "No Movement",
                     "servo": "Servo 1",
-                    "value": 0
+                    "action": Servo.mid
                 }
             }
 
         if not pins:
             # These are arbitrary pin values. They should be replaced with the actual pin values
-            pins = { "Servo 1": 17 }
+            pins = { "Servo 1": SERVO_1_PIN }
 
         pigpio.pi()
         self._port = port
