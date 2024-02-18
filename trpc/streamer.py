@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import socket
 import pickle
 from typing import Optional
-from trpc.utils import get_logger
+from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
