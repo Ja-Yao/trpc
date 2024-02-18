@@ -37,7 +37,6 @@ class TRPCStreamer(Streamer):
         super().__init__()
         self._port = port
         self._ip_address = ip_address
-        self._socket.bind((self._ip_address, self._port))
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         data = {"emg": emg, "movement": movement}
