@@ -12,34 +12,31 @@ class Streamer:
         
         Args:
             num_channels: number of electrodes to read
-            i2c_addr: address of the i2c device
         
         """
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
       
-        self.i2c_addr = 0x48 #found using i2c detect tool on rasp pi (connects to i2C1)
-        self.i2c_bus = 1
-        self.num_channels = num_channels
+        #for setting up i2c device
+        self.i2c_addr = 0x48 #found using i2c detect tool on rasp pi (connects to i2C 1)
+        self.i2c_bus = 1 #found on the pi documentation
+    
+
         self.pins = [num_channels]
 
-    def setup_i2c(i2c_addr, i2c_bus, self):
+    def setup_i2c(self):
         """Setups i2c communications with ADC
         
         Args:
-            i2c_addr: address of ADC
-            i2c_bus: i2c bus number? (on pi?)
+            self
         
         """
         i2c_flags = 0 # no flags defined currently
         
-        #pin registers
+        #pin registers on ADC
         GND = 0b1001000
         VDD = 0b1001001
         SDA = 0b1001010
         SCL = 0b1001011
-        
-        #0 = recieve / 1 = transmit 
-        rw = 1
         
         #register location for pointer registers
         conversion = 0x00
@@ -47,7 +44,7 @@ class Streamer:
         lowthresh = 0x02
         highthresh = 0x03
     
-        
+        #create
         handle = GPIO.i2c_open(self.i2c_bus, self.i2c_addr, i2c_flags)
         
         if handle < 0:
@@ -62,11 +59,11 @@ class Streamer:
         
         return handle
         
-    def threaded_mux_selector(handle, self):
+    def analog_input_selector(handle, self):
         """flips through mux inputs
         
         Args:
-            handle: device #
+            handle: device # as setup in i2c_setup
         
         """
         
@@ -78,18 +75,22 @@ class Streamer:
         
         # starts in state A0   
        
-        A1 = 0x5080     #0101 0000 1000 0000
-        A2 = 0x6080     #0110 0000 1000 0000
-        A3 = 0x7080     #0111 0000 1000 0000
-        A0 = 0x4080     #0100 0000 1000 0000 #default state
+        A1 = 0b0101_0000_1000_0000
+        A2 = 0x0110_0000_1000_0000
+        A3 = 0x0111_0000_1000_0000
+        A0 = 0x0100_0000_1000_0000 #default state
     
         states = [A1, A2, A3, A0]
+        
+        #register of data stream
+        SDA = 0b1001010
         
         #looping variable
         i = 0
         
         for i in range(4):
-            GPIO.i2c_write_word_data(handle, reg, states[i])
+            self.pins[i] = GPIO.i2c_read_word_data(handle, SDA) #reads default state value
+            GPIO.i2c_write_word_data(handle, SDA, states[i]) #changes A# for next iteration
             i += 1
             
      
