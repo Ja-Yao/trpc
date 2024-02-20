@@ -54,11 +54,6 @@ class Streamer:
             print("i2c_open failed") 
             return -1;           
         
-        #writes the desired pin register to the i2c
-        GPIO.i2c_write_byte_data(handle, self.i2c_addr, SCL)
-        
-        #writes to address pointer register to choose future byte writing
-        GPIO.i2c_write_byte(handle, config)
         
         return handle
         
@@ -85,15 +80,30 @@ class Streamer:
     
         states = [A1, A2, A3, A0]
         
+        conversion = 0x00
+        config = 0x01
+        lowthresh = 0x02
+        highthresh = 0x03
+        
         #register of data stream
         SDA = 0b1001010
         
         #looping variable
         i = 0
         
+        #for reading bytes out of order
+        read_word = 0x00
+        
         for i in range(4):
-            self.pins[i] = GPIO.i2c_read_word_data(handle, SDA) #reads default state value
-            GPIO.i2c_write_word_data(handle, SDA, states[i]) #changes A# for next iteration
+            GPIO.i2c_write_byte(handle, conversion) #changes ptr to conversion register
+            
+            read_word = GPIO.i2c_read_word_data(handle, conversion) #reads lsb then msb 
+            flipped_word = ((read_word & 0x0F) << 4) | ((read_word & 0xF0) >> 4) # flips the word ex 0x18 to 0x81
+           
+            self.pins[i] = flipped_word #adds to output pins
+            
+            GPIO.i2c_write_byte(handle, config) # changes addr pointer reg to config
+            GPIO.i2c_write_word_data(handle, config, states[i]) #changes A# for next iteration
             i += 1
             
      
