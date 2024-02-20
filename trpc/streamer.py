@@ -7,18 +7,21 @@ from typing import Optional
 
 class Streamer:
     """Streamer class for sending data from device to LibEMG pipeline"""
-    def __init__(self, num_channels: int = 2) -> None:
+    def __init__(self, i2c_addr: int = 0x48, i2c_bus: int = 1, num_channels: int = 2) -> None:
         """initializes streamer class
         
         Args:
             num_channels: number of electrodes to read
+            i2c_addr: address of the i2c device
+            i2c_bus: bus number of the i2c device
+            
         
         """
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
       
         #for setting up i2c device
-        self.i2c_addr = 0x48 #found using i2c detect tool on rasp pi (connects to i2C 1)
-        self.i2c_bus = 1 #found on the pi documentation
+        self.i2c_addr = i2c_addr #found using i2c detect tool on rasp pi (connects to i2C 1)
+        self.i2c_bus = i2c_bus #found on the pi documentation
     
 
         self.pins = [num_channels]
@@ -76,9 +79,9 @@ class Streamer:
         # starts in state A0   
        
         A1 = 0b0101_0000_1000_0000
-        A2 = 0x0110_0000_1000_0000
-        A3 = 0x0111_0000_1000_0000
-        A0 = 0x0100_0000_1000_0000 #default state
+        A2 = 0b0110_0000_1000_0000
+        A3 = 0b0111_0000_1000_0000
+        A0 = 0b0100_0000_1000_0000 #default state
     
         states = [A1, A2, A3, A0]
         
