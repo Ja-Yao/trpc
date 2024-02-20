@@ -7,7 +7,7 @@ from typing import Optional
 
 class Streamer:
     """Streamer class for sending data from device to LibEMG pipeline"""
-    def __init__(self, i2c_addr: int = 0x48, i2c_bus: int = 1, num_channels: int = 2) -> None:
+    def __init__(self, i2c_addr: int = 0x48, i2c_bus: int = 1, num_channels: int = 4) -> None:
         """initializes streamer class
         
         Args:
@@ -93,6 +93,7 @@ class Streamer:
         
         #for reading bytes out of order
         read_word = 0x00
+    
         
         for i in range(4):
             GPIO.i2c_write_byte(handle, conversion) #changes ptr to conversion register
@@ -100,10 +101,13 @@ class Streamer:
             read_word = GPIO.i2c_read_word_data(handle, conversion) #reads lsb then msb 
             flipped_word = ((read_word & 0x0F) << 4) | ((read_word & 0xF0) >> 4) # flips the word ex 0x18 to 0x81
            
-            self.pins[i] = flipped_word #adds to output pins
+            self.pins[i] = flipped_word #adds to output list
             
             GPIO.i2c_write_byte(handle, config) # changes addr pointer reg to config
-            GPIO.i2c_write_word_data(handle, config, states[i]) #changes A# for next iteration
+            
+            flipped_state = ((states[i] & 0x0F) << 4) | ((states[i] & 0xF0) >> 4) # flips the word ex 0x18 to 0x81
+            GPIO.i2c_write_word_data(handle, config, flipped_state) #changes A# for next iteration
+            
             i += 1
             
      
