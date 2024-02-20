@@ -1,6 +1,6 @@
 import socket
 import pickle
-import pigpio
+import pigpio as GPIO
 import time
 from typing import Optional
 
@@ -12,10 +12,13 @@ class Streamer:
         
         Args:
             num_channels: number of electrodes to read
+            i2c_addr: address of the i2c device
         
         """
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+      
+        self.i2c_addr = 0x48 #found using i2c detect tool on rasp pi (connects to i2C1)
+        self.i2c_bus = 1
         self.num_channels = num_channels
         self.pins = [num_channels]
 
@@ -45,12 +48,17 @@ class Streamer:
         highthresh = 0x03
     
         
-        handle = i2c_open(i2c_bus, i2c_addr, i2c_flags)
+        handle = GPIO.i2c_open(self.i2c_bus, self.i2c_addr, i2c_flags)
+        
+        if handle < 0:
+            print("i2c_open failed") 
+            return -1;           
         
         #writes the desired pin register to the i2c
-        i2c_write_byte_data(handle, (SCL << 1) | rw)
+        GPIO.i2c_write_byte_data(handle, self.i2c_addr, SCL)
+        
         #writes to address pointer register to choose future byte writing
-        i2c_write_byte(handle, config)
+        GPIO.i2c_write_byte(handle, config)
         
         return handle
         
@@ -81,7 +89,7 @@ class Streamer:
         i = 0
         
         for i in range(4):
-            i2c_write_word_data(handle, reg, states[i])
+            GPIO.i2c_write_word_data(handle, reg, states[i])
             i += 1
             
      
