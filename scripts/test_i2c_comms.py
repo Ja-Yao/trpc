@@ -16,9 +16,8 @@ if __name__ == "__main__":
     sample_num = 128 # default value
     #to collect a large number of input sets
     for i in range(sample_num*2):
-        my_streamer.analog_input_selector(handle) # collects pin data on 4 inputs
-        print(my_streamer.pins) # prints out set of pins per sample
-        i+=1
+        my_streamer.analog_input_selector() # collects pin data on 4 inputs
+        print(f"{hex(my_streamer.pins[0])}  {hex(my_streamer.pins[1])} {hex(my_streamer.pins[2])} {hex(my_streamer.pins[3])}")
         
     subprocess.run(["sudo", "killall", "pigpiod"])
     
