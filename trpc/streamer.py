@@ -38,7 +38,7 @@ class Streamer:
         self.i2c_bus = i2c_bus  # found on the pi documentation
         self.handle = 0
 
-        self.pins = [num_channels]
+        self.pins = [None for i in range(num_channels)]
 
     def setup_i2c(self):
         """Setups i2c communications with ADC
@@ -84,7 +84,7 @@ class Streamer:
         # register of data stream
         SDA = 0b1001010
 
-        for i in range(4):
+        for i in range(3):
             self.pi.i2c_write_byte(self.handle, CONVERSION)  # changes ptr to conversion register
 
             read_word = self.pi.i2c_read_word_data(self.handle, CONVERSION)  # reads lsb then msb
