@@ -38,7 +38,7 @@ class Streamer:
         self.i2c_bus = i2c_bus  # found on the pi documentation
         self.handle = 0
 
-        self.pins = [None for i in range(num_channels)]
+        self.pins = [0 for i in range(num_channels)]
 
     def setup_i2c(self):
         """Setups i2c communications with ADC
