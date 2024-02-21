@@ -1,7 +1,7 @@
-from trpc import streamer
+from trpc import Streamer
 
 #initialize streamer object
-my_streamer = streamer()
+my_streamer = Streamer()
 
 #setup i2c module 
 handle = my_streamer.i2c_setup()
