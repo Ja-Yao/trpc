@@ -84,12 +84,6 @@ class Streamer:
         # register of data stream
         SDA = 0b1001010
 
-        # looping variable
-        i = 0
-
-        # for reading bytes out of order
-        read_word = 0x00
-
         for i in range(4):
             self.pi.i2c_write_byte(self.handle, CONVERSION)  # changes ptr to conversion register
 
@@ -103,7 +97,6 @@ class Streamer:
             flipped_state = ((states[i] & 0x0F) << 4) | ((states[i] & 0xF0) >> 4)  # flips the word ex 0x18 to 0x81
             self.pi.i2c_write_word_data(self.handle, CONFIG, flipped_state)  # changes A# for next iteration
 
-            i += 1
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         """Writes data to socket. On every sample, we pickle the data and send it to the socket.
