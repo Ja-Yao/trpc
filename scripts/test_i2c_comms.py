@@ -13,25 +13,30 @@ if __name__ == "__main__":
     #setup i2c module 
     handle = my_streamer.setup_i2c()
     plot_data = []
+    plot_data_convert = []
 
     sample_num = 128 # default value
     #to collect a large number of input sets
-    for i in range(sample_num*2):
+    for i in range(sample_num*16):
         my_streamer.analog_input_selector() # collects pin data on 4 inputs
         print(f"{hex(my_streamer.pins[0])}  {hex(my_streamer.pins[1])} {hex(my_streamer.pins[2])} {hex(my_streamer.pins[3])}")
         plot_data.append(my_streamer.pins[0])
 
+        #convert = ~my_streamer.pins[0] + 1
+        #plot_data_convert.append(convert)
 
 
     # Plot the data
 
-    plt.plot(plot_data)
+    plt.plot(plot_data, label='regular')
+    #plt.plot(plot_data_convert, label='converted to signed')
     plt.xlabel('Sample')
     plt.ylabel('Value')
     plt.title('2\'s Complement Data Plot')
     plt.grid(True)
+    plt.legend()
+
     plt.show()
-    
     exit(0)
 
         
