@@ -30,7 +30,7 @@ if __name__ == "__main__":
     plt.ylabel('Value')
     plt.title('2\'s Complement Data Plot')
     plt.grid(True)
-    plt.show(block=False)
+    plt.show()
     
     exit(0)
 
