@@ -45,11 +45,14 @@ class TRPCStreamer(Streamer):
 
     def read_emg(self):
         self._adc.readADC(0)
-    
-        while True:
+        data = []
+        for i in range(999):
             raw = self._adc.getValue()
-            logger.info("{0:.3f} V".format(self._adc.toVoltage(raw)))
+            data.append(raw)
+            # logger.info("{0:.3f} V".format(self._adc.toVoltage(raw)))
             sleep(1)
+
+        return data
             
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
