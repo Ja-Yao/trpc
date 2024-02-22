@@ -21,14 +21,14 @@ if __name__ == "__main__":
         #print(f"{hex(my_streamer.pins[0])}  {hex(my_streamer.pins[1])} {hex(my_streamer.pins[2])} {hex(my_streamer.pins[3])}")
         plot_data.append(my_streamer.pins[0])
 
-
-# Plot the data
-plt.plot(plot_data)
-plt.xlabel('Sample')
-plt.ylabel('Value')
-plt.title('2\'s Complement Data Plot')
-plt.grid(True)
-plt.show()
+    plt.plot(plot_data)
+    plt.xlabel('Sample')
+    plt.ylabel('Value')
+    plt.title('2\'s Complement Data Plot')
+    plt.grid(True)
+    plt.show(block=False)
+    
+    exit(0)
         
         
         
