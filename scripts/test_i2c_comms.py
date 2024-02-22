@@ -21,23 +21,19 @@ if __name__ == "__main__":
         print(f"{hex(my_streamer.pins[0])}  {hex(my_streamer.pins[1])} {hex(my_streamer.pins[2])} {hex(my_streamer.pins[3])}")
         plot_data.append(my_streamer.pins[0])
 
-<<<<<<< Updated upstream
-=======
+
 
     # Plot the data
->>>>>>> Stashed changes
+
     plt.plot(plot_data)
     plt.xlabel('Sample')
     plt.ylabel('Value')
     plt.title('2\'s Complement Data Plot')
     plt.grid(True)
-<<<<<<< Updated upstream
     plt.show(block=False)
     
     exit(0)
-=======
-    plt.show()
->>>>>>> Stashed changes
+
         
         
         
