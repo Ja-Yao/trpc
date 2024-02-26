@@ -41,6 +41,8 @@ class TRPCStreamer(Streamer):
         self._port = port
         self._ip_address = ip_address
         self._adc = ADS1115(1)
+        self._adc.setDataRate(1)
+        self._adc.setGain(1)
         self._adc.setMode(ADS1115.MODE_SINGLE)
 
     def read_emg(self):
@@ -49,7 +51,7 @@ class TRPCStreamer(Streamer):
         while True:
             if self._adc.isReady():
                 data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
-                if len(data) == 1000:
+                if len(data) == 500:
                     break
 
         return data
