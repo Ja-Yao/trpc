@@ -41,7 +41,7 @@ class TRPCStreamer(Streamer):
         self._port = port
         self._ip_address = ip_address
         self._adc = ADS1115(1)
-        self._adc.setDataRate(1)
+        self._adc.setDataRate(7)
         self._adc.setGain(1)
         self._adc.setMode(ADS1115.MODE_SINGLE)
 
