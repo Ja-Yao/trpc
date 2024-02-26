@@ -1,6 +1,9 @@
-from abc import ABC, abstractmethod
-import socket
 import pickle
+import socket
+
+from abc import ABC, abstractmethod
+from ADS1x15 import ADS1115
+from datetime import datetime
 from typing import Optional
 from trpc.utils.logger import get_logger
 
@@ -37,6 +40,22 @@ class TRPCStreamer(Streamer):
         super().__init__()
         self._port = port
         self._ip_address = ip_address
+        self._adc = ADS1115(1)
+        self._adc.setDataRate(7)
+        self._adc.setGain(1)
+        self._adc.setMode(ADS1115.MODE_SINGLE)
+
+    def read_emg(self):
+        self._adc.requestADC(0)
+        data = []
+        while True:
+            if self._adc.isReady():
+                data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
+                if len(data) == 500:
+                    break
+
+        return data
+            
 
     def write_to_socket(self, emg, movement: Optional[int] = None):
         data = {"emg": emg, "movement": movement}
