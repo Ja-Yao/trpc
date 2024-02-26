@@ -41,16 +41,16 @@ class TRPCStreamer(Streamer):
         self._port = port
         self._ip_address = ip_address
         self._adc = ADS1115(1)
-        self._adc.setMode(ADS1115.MODE_CONTINUOUS)
+        self._adc.setMode(ADS1115.MODE_SINGLE)
 
     def read_emg(self):
-        self._adc.readADC(0)
+        self._adc.requestADC(0)
         data = []
-        for i in range(999):
-            raw = self._adc.getValue()
-            data.append(raw)
-            # logger.info("{0:.3f} V".format(self._adc.toVoltage(raw)))
-            sleep(1)
+        while True:
+            if self._adc.isReady():
+                data.append(self._adc.toVoltage(self._adc.readADC(0)))
+                if len(data) == 1000:
+                    break
 
         return data
             
