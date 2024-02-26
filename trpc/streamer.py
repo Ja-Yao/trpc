@@ -3,7 +3,7 @@ import socket
 
 from abc import ABC, abstractmethod
 from ADS1x15 import ADS1115
-from time import sleep
+from datetime import datetime
 from typing import Optional
 from trpc.utils.logger import get_logger
 
@@ -48,7 +48,7 @@ class TRPCStreamer(Streamer):
         data = []
         while True:
             if self._adc.isReady():
-                data.append(self._adc.toVoltage(self._adc.readADC(0)))
+                data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
                 if len(data) == 1000:
                     break
 
