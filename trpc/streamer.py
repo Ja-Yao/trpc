@@ -3,8 +3,8 @@ import socket
 
 from abc import ABC, abstractmethod
 from ADS1x15 import ADS1115
-from datetime import datetime
-from typing import Optional
+# from datetime import datetime
+from typing import List
 from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -20,7 +20,7 @@ class Streamer(ABC):
         return self._socket
 
     @abstractmethod
-    def write_to_socket(self, emg, movement: Optional[int] = None):
+    def write_to_socket(self, emg: List[float | int]):
         """Writes data to socket. On every sample, we pickle the data and send it to the socket.
         
         Args:
@@ -47,19 +47,31 @@ class TRPCStreamer(Streamer):
 
     def read_emg(self):
         self._adc.requestADC(0)
-        data = []
-        while True:
-            if self._adc.isReady():
-                data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
-                if len(data) == 500:
-                    break
+        # Uncomment the following commented lines to run the test_i2c.py script
+        # data = []
+        try:
+            while True:
+                if self._adc.isReady():
+                    # data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
+                    # if len(data) == 500:
+                    #     break
+                    voltages = []
+                    voltages.append(self._adc.toVoltage(self._adc.readADC(0)))
+                    voltages.append(self._adc.toVoltage(self._adc.readADC(1)))
+                    voltages.append(self._adc.toVoltage(self._adc.readADC(2)))
+                    voltages.append(self._adc.toVoltage(self._adc.readADC(3)))
 
-        return data
+                    self.write_to_socket(pickle.dumps(voltages), (self._ip_address, self._port))
+        except KeyboardInterrupt:
+            logger.info("Interrupted by user. Closing socket and exiting...")
+            self.close_socket()
+            exit(0)
+
+        # return data
             
 
-    def write_to_socket(self, emg, movement: Optional[int] = None):
-        data = {"emg": emg, "movement": movement}
-        self._socket.sendto(pickle.dumps(data), (self._ip_address, self._port))
+    def write_to_socket(self, emg: List[float | int]):
+        self._socket.sendto(pickle.dumps(emg), (self._ip_address, self._port))
 
     def close_socket(self):
         self._socket.close()
