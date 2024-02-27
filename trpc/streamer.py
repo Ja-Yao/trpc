@@ -18,6 +18,11 @@ class Streamer(ABC):
     @property
     def socket(self):
         return self._socket
+    
+    @abstractmethod
+    def read_emg(self):
+        """Reads EMG data from the device"""
+        pass
 
     @abstractmethod
     def write_to_socket(self, emg: List[float | int]):
@@ -66,6 +71,8 @@ class TRPCStreamer(Streamer):
             logger.info("Interrupted by user. Closing socket and exiting...")
             self.close_socket()
             exit(0)
+        except SystemExit:
+            self.close_socket()
 
         # return data
             

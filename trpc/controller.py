@@ -1,5 +1,6 @@
-import socket
+import multiprocessing
 import pigpio
+import socket
 
 from gpiozero import Servo
 from typing import Any, Dict
@@ -57,6 +58,7 @@ class Controller:
         self._streamer = streamer
         self._classifier = classifier
         self._driver = TRPCDriver(servo_pins=pins, gestures=self._gestures)
+        self._streamer_process = multiprocessing.Process(target=self._streamer.read_emg)
 
     @property
     def port(self):
@@ -100,8 +102,7 @@ class Controller:
 
     def start(self):
         """Runs the startup process for the controller. This includes starting the streamer and the classifier."""
-        # TODO: Have streamer run in a separate process
-        # self._streamer.run()
+        self._streamer_process.start()
         self._classifier.run()
         logger.info("Controller started")
 
@@ -120,6 +121,7 @@ class Controller:
         self.stop()
 
     def stop(self):
-        self._streamer.close_socket()
+        if self._streamer_process.is_alive():
+            self._streamer_process.terminate()
         self._classifier.close()
         self._driver.disconnect_pins()
