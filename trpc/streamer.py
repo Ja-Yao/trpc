@@ -52,14 +52,8 @@ class TRPCStreamer(Streamer):
         try:
             while True:
                 if self._adc.isReady():
-                    # data.append({"voltage": self._adc.toVoltage(self._adc.readADC(0)), "timestamp": datetime.now()})
-                    # if len(data) == 500:
-                    #     break
-                    voltages = []
-                    voltages.append(self._adc.toVoltage(self._adc.readADC(0)))
-                    voltages.append(self._adc.toVoltage(self._adc.readADC(1)))
-                    voltages.append(self._adc.toVoltage(self._adc.readADC(2)))
-                    voltages.append(self._adc.toVoltage(self._adc.readADC(3)))
+                    # get list of voltages from each channel in mV
+                    voltages = [int(self._adc.toVoltage(self._adc.readADC(i)) * 1000) for i in range(4)]
 
                     self.write_to_socket(voltages)
         except KeyboardInterrupt:
