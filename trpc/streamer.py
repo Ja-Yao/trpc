@@ -40,7 +40,7 @@ class Streamer(ABC):
 
 class TRPCStreamer(Streamer):
     """Streamer class for sending data from device to LibEMG pipeline"""
-    def __init__(self, port: int = 12345, ip_address: str = ""):
+    def __init__(self, port: int = 12345, ip_address: str = "127.0.0.1"):
         super().__init__(port, ip_address)
         self._adc = ADS1115(1)
         self._adc.setDataRate(7)
