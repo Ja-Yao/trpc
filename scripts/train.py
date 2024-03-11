@@ -1,11 +1,13 @@
 from libemg.data_handler import OnlineDataHandler
 from libemg.screen_guided_training import ScreenGuidedTraining
+from multiprocessing import Process
 from trpc import TRPCStreamer
 
 if __name__ == "__main__":
     s = TRPCStreamer()
     odh = OnlineDataHandler(emg_arr=True)
     odh.start_listening()
+    Process.run(s.read_emg())
 
     train_ui = ScreenGuidedTraining()
     train_ui.download_gestures([1, 2, 3, 6, 7], "data/gestures/", download_gifs=True)
