@@ -1,15 +1,16 @@
 import multiprocessing
-import pigpio
 import socket
 
+import pigpio
 from gpiozero import Servo
-from typing import Any, Dict
-from trpc.utils.logger import get_logger
+
 from trpc import Streamer, Processor
+from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 SERVO_1_PIN = 17
+
 
 class Controller:
     """This class represents the controller for the robot arm assembly. It can read the classification from the
@@ -23,9 +24,15 @@ class Controller:
             pins: Dictionary of servo number and corresponding pins
     """
 
-    def __init__(self, streamer: Streamer, classifier: Processor, port: int = 12346, ip_address: str = "127.0.0.1", 
-                 gestures: Dict[int, Dict[str, Any]] = {}, pins: Dict[str, int] = {}):
-        from trpc import TRPCDriver
+    def __init__(self, streamer: Streamer, classifier: Processor, port: int = 12346, ip_address: str = "127.0.0.1",
+                 gestures=None, pins=None):
+        from trpc import TRPCDriver  # This import is here to avoid circular imports
+
+        if gestures is None:
+            gestures = {}
+        if pins is None:
+            pins = {}
+
         if not gestures:
             gestures = {
                 0: {
@@ -47,7 +54,7 @@ class Controller:
 
         if not pins:
             # These are arbitrary pin values. They should be replaced with the actual pin values
-            pins = { "Servo 1": SERVO_1_PIN }
+            pins = {"Servo 1": SERVO_1_PIN}
 
         pigpio.pi()
         self._port = port
@@ -63,22 +70,6 @@ class Controller:
     @property
     def port(self):
         return self._port
-    
-    @property
-    def ip_address(self):
-        return self._ip_address
-    
-    @property
-    def gestures(self):
-        return self._gestures
-    
-    @property
-    def streamer(self):
-        return self._streamer
-    
-    @property
-    def classifier(self):
-        return self._classifier
 
     @property
     def ip_address(self):
@@ -111,13 +102,13 @@ class Controller:
         while True:
             try:
                 data, addr = self._classifier_output_socket.recvfrom(1024)  # Receive up to 1024 bytes
-                gesture_class, confidence, timestamp = data.decode().split()  # Decode the received bytes
+                gesture_class, velocity, timestamp = data.decode().split()  # Decode the received bytes
                 if int(gesture_class) in self._gestures.keys():
-                    self._driver.execute_command(self._gestures[int(gesture_class)])
+                    self._driver.execute_command(self._gestures[int(gesture_class)], velocity)
             except KeyboardInterrupt:
                 logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
                 break
-        
+
         self.stop()
 
     def stop(self):

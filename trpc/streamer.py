@@ -1,9 +1,10 @@
 import pickle
 import socket
-
 from abc import ABC, abstractmethod
-from ADS1x15 import ADS1115
 from typing import List
+
+from ADS1x15 import ADS1115
+
 from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -43,8 +44,12 @@ class TRPCStreamer(Streamer):
     def __init__(self, port: int = 12345, ip_address: str = "127.0.0.1"):
         super().__init__(port, ip_address)
         self._adc = ADS1115(1)
-        self._adc.setDataRate(7)
-        self._adc.setGain(1)
+
+        # set the gain and data rate (samples/second)
+        self._adc.setDataRate(ADS1115.DR_ADS111X_860)
+        self._adc.setGain(ADS1115.PGA_0_256V)
+
+        # set the mode to single shot
         self._adc.setMode(ADS1115.MODE_SINGLE)
 
     def read_emg(self):

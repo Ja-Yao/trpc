@@ -4,12 +4,14 @@ from os.path import dirname, exists
 from typing import List, Optional
 
 from libemg.data_handler import OnlineDataHandler, OfflineDataHandler
-from libemg.feature_extractor import FeatureExtractor
 from libemg.emg_classifier import EMGClassifier, OnlineEMGClassifier
+from libemg.feature_extractor import FeatureExtractor
 from libemg.utils import make_regex
+
 from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
 
 class Processor(ABC):
     """Abstract Class for processing data from a device to the LibEMG pipeline
@@ -32,7 +34,7 @@ class Processor(ABC):
         self._model = model
         if classifier_path is None:
             self.classifier_path = "classifiers/svm.pickle"
-        
+
         # The handler listens to UDP port 12345 by default, with ip address 127.0.0.1.
         # No need to specify these parameters unless we need to change them.
         self._odh = OnlineDataHandler()
@@ -109,13 +111,13 @@ class Processor(ABC):
             emg.save(self.classifier_path)
 
         return OnlineEMGClassifier(emg, self.__window_size, self.__window_increment, self.odh, feature_list)
-    
+
     @abstractmethod
     def run(self, block: bool = False):
         """Runs the processor. This can be a blocking or non-blocking function.
-        
+
             Args:
-                block: If True, the processor will block the main thread until the processor is stopped. If False, it 
+                block: If True, the processor will block the main thread until the processor is stopped. If False, it
                           will run in a separate process.
         """
         pass
@@ -138,9 +140,10 @@ class TRPCProcessor(Processor):
             classifier_path: Path to the classifier file. If the file does not exist, the classifier will be trained
                              from scratch and saved to this path.
     """
-    def __init__(self, window_size: int = 40, window_increment: int = 20, _feature_set: str | List[str] = "LS4",
+
+    def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS4",
                  model: str = "SVM", classifier_path: Optional[str] = None) -> None:
-        super().__init__(window_size, window_increment, _feature_set, model, classifier_path)
+        super().__init__(window_size, window_increment, feature_set, model, classifier_path)
 
     def run(self, block: bool = False):
         self._classifier.run(block=block)
