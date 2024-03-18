@@ -9,7 +9,7 @@ from trpc.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-SERVO_1_PIN = 17
+SERVO_1_PIN = 23
 
 
 class Controller:

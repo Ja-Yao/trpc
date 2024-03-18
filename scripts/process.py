@@ -1,13 +1,13 @@
 import socket
-import datetime
-
 from os.path import exists
+
 from libemg.datasets import OneSubjectMyoDataset
+
 from trpc import TRPCProcessor
 from trpc.utils.logger import get_logger
 
-
 logger = get_logger(__name__)
+
 
 def handle_close(p: TRPCProcessor, s: socket.socket):
     logger.info("Shutting down processor...")
@@ -31,8 +31,8 @@ if __name__ == "__main__":
             data, addr = sock.recvfrom(1024)  # Receive up to 1024 bytes
             gesture_class, prob, timestamp = data.decode().split()  # Decode the received bytes
             try:
-                logger.info({ "class": classes[int(gesture_class)], "confidence": f"{round(float(prob) * 100, 2)}%" })
+                logger.info({"class": classes[int(gesture_class)], "confidence": f"{round(float(prob) * 100, 2)}%"})
             except KeyError:
-                logger.info({ "class": "Unknown", "confidence": "100.0%" })
+                logger.info({"class": "Unknown", "confidence": "100.0%"})
     except KeyboardInterrupt:
         handle_close(processor, sock)

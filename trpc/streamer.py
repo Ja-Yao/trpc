@@ -56,7 +56,7 @@ class TRPCStreamer(Streamer):
 
         # set the gain and data rate (samples/second)
         self._adc.setDataRate(ADS1115.DR_ADS111X_860)
-        self._adc.setGain(ADS1115.PGA_0_256V)
+        self._adc.setGain(ADS1115.PGA_2_048V)
 
         # set the mode to single shot
         self._adc.setMode(ADS1115.MODE_SINGLE)
