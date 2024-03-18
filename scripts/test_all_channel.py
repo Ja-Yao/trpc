@@ -13,6 +13,7 @@ if __name__ == "__main__":
     try:
         p.start()
         processor.run()
+        processor.odh.visualize_channels(channels=[0, 1, 2, 3])
     except KeyboardInterrupt:
         logger.info("Shutting down processor...")
         processor.close()

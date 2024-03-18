@@ -52,6 +52,12 @@ class TRPCStreamer(Streamer):
 
     def __init__(self, lock, port: int = 12345, ip_address: str = "127.0.0.1"):
         super().__init__(port, ip_address)
+
+        if not isinstance(lock, Lock):
+            raise ValueError(f"Invalid lock: {lock}")
+        self._lock = lock
+
+    def read_emg(self):
         self._adc = ADS1115(1)
 
         # set the gain and data rate (samples/second)
@@ -61,11 +67,6 @@ class TRPCStreamer(Streamer):
         # set the mode to single shot
         self._adc.setMode(ADS1115.MODE_SINGLE)
 
-        if not isinstance(lock, Lock):
-            raise ValueError(f"Invalid lock: {lock}")
-        self._lock = lock
-
-    def read_emg(self):
         self._adc.requestADC(0)
         try:
             while True:
