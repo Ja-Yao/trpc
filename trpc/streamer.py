@@ -1,7 +1,7 @@
 import pickle
 import socket
 from abc import ABC, abstractmethod
-from multiprocessing import Lock
+from multiprocessing.synchronize import Lock as LockType
 from typing import List
 
 from ADS1x15 import ADS1115
@@ -53,7 +53,8 @@ class TRPCStreamer(Streamer):
     def __init__(self, lock, port: int = 12345, ip_address: str = "127.0.0.1"):
         super().__init__(port, ip_address)
 
-        if not isinstance(lock, Lock):
+        self._adc = None
+        if not isinstance(lock, LockType):
             raise ValueError(f"Invalid lock: {lock}")
         self._lock = lock
 

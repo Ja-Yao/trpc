@@ -1,4 +1,5 @@
 import subprocess
+from multiprocessing import Lock
 from os.path import exists
 
 from libemg.datasets import OneSubjectMyoDataset
@@ -16,7 +17,9 @@ if __name__ == "__main__":
         logger.info("Downloading data...")
         dataset = OneSubjectMyoDataset(save_dir="data", redownload=False)
     subprocess.run(["sudo", "pigpiod"])
-    controller = Controller(streamer=TRPCStreamer(), classifier=TRPCProcessor(model="LDA", feature_set="LS9"))
+
+    lock = Lock()
+    controller = Controller(streamer=TRPCStreamer(lock), classifier=TRPCProcessor(model="LDA", feature_set="LS9"))
 
     try:
         controller.start()

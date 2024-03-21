@@ -26,14 +26,14 @@ class Processor(ABC):
                              from scratch and saved to this path.
     """
 
-    def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS4",
-                 model: str = "SVM", classifier_path: Optional[str] = None) -> None:
+    def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS9",
+                 model: str = "LDA", classifier_path: Optional[str] = None) -> None:
         self.__window_size = window_size
         self.__window_increment = window_increment
         self._feature_set = feature_set
         self._model = model
         if classifier_path is None:
-            self.classifier_path = "classifiers/svm.pickle"
+            self.classifier_path = "classifiers/lda.pickle"
 
         # The handler listens to UDP port 12345 by default, with ip address 127.0.0.1.
         # No need to specify these parameters unless we need to change them.
@@ -80,7 +80,7 @@ class Processor(ABC):
             # Step 1: Parse training data
             classes_values = ["0", "1", "2", "3", "4"]
             classes_regex = make_regex(left_bound="_C_", right_bound=".csv", values=classes_values)
-            reps_values = ["0", "1", "2", "3"]
+            reps_values = ["0", "1", "2"]
             reps_regex = make_regex(left_bound="R_", right_bound="_C_", values=reps_values)
             dic = {
                 "reps": reps_values,
@@ -141,8 +141,8 @@ class TRPCProcessor(Processor):
                              from scratch and saved to this path.
     """
 
-    def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS4",
-                 model: str = "SVM", classifier_path: Optional[str] = None) -> None:
+    def __init__(self, window_size: int = 40, window_increment: int = 20, feature_set: str | List[str] = "LS9",
+                 model: str = "LDA", classifier_path: Optional[str] = None) -> None:
         super().__init__(window_size, window_increment, feature_set, model, classifier_path)
 
     def run(self, block: bool = False):
