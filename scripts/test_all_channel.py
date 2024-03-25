@@ -9,7 +9,7 @@ if __name__ == "__main__":
     lock = Lock()
     s = TRPCStreamer(lock)
     p = Process(target=s.read_emg, daemon=False)
-    processor = TRPCProcessor(model="SVM")
+    processor = TRPCProcessor()
     try:
         p.start()
         processor.run()

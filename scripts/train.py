@@ -16,7 +16,7 @@ if __name__ == "__main__":
         p.start()
 
         train_ui = ScreenGuidedTraining()
-        train_ui.download_gestures([1, 2, 3, 6, 7], "data/training/gestures/", download_gifs=True)
+        train_ui.download_gestures([1, 2, 3], "data/training/gestures/", download_gifs=True)
         train_ui.launch_training(odh, output_folder="data/training/sgt/", rep_folder="data/training/gestures/")
 
         p.terminate()

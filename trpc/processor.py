@@ -78,7 +78,7 @@ class Processor(ABC):
         except FileNotFoundError:
             logger.info("Classifier not found. Training classifier from scratch...")
             # Step 1: Parse training data
-            classes_values = ["0", "1", "2", "3", "4"]
+            classes_values = ["0", "1", "2"]
             classes_regex = make_regex(left_bound="_C_", right_bound=".csv", values=classes_values)
             reps_values = ["0", "1", "2"]
             reps_regex = make_regex(left_bound="R_", right_bound="_C_", values=reps_values)
@@ -105,12 +105,14 @@ class Processor(ABC):
             # https://libemg.github.io/libemg/documentation/classification/classification.html#velocity-control-sup-4-sup
             emg.add_velocity(train_windows, train_meta['classes'])
             emg.add_rejection(0.8)
-            emg.fit(model=self.model, feature_dictionary=data_set.copy())
+            emg.fit(model=self.model, feature_dictionary=data_set)
             if not exists(self.classifier_path):
                 makedirs(dirname(self.classifier_path), exist_ok=True)
             emg.save(self.classifier_path)
 
-        return OnlineEMGClassifier(emg, self.__window_size, self.__window_increment, self.odh, feature_list)
+        return OnlineEMGClassifier(offline_classifier=emg, window_size=self.__window_size,
+                                   window_increment=self.__window_increment, online_data_handler=self.odh,
+                                   features=feature_list)
 
     @abstractmethod
     def run(self, block: bool = False):

@@ -63,7 +63,7 @@ class TRPCStreamer(Streamer):
 
         # set the gain and data rate (samples/second)
         self._adc.setDataRate(ADS1115.DR_ADS111X_860)
-        self._adc.setGain(ADS1115.PGA_2_048V)
+        self._adc.setGain(ADS1115.PGA_4_096V)
 
         # set the mode to single shot
         self._adc.setMode(ADS1115.MODE_SINGLE)
@@ -74,7 +74,7 @@ class TRPCStreamer(Streamer):
                 if self._adc.isReady():
                     # get list of voltages from each channel in mV
                     with self._lock:
-                        voltages = [int(self._adc.toVoltage(self._adc.readADC(i))) for i in range(4)]
+                        voltages = [self._adc.toVoltage(self._adc.readADC(i)) for i in range(4)]
                         self.write_to_socket(voltages)
         except KeyboardInterrupt:
             logger.info("Interrupted by user. Closing socket and exiting...")
