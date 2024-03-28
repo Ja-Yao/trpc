@@ -26,7 +26,7 @@ class Processor(ABC):
                              from scratch and saved to this path.
     """
 
-    def __init__(self, window_size: int = 100, window_increment: int = 50, feature_set: str | List[str] = "LS9",
+    def __init__(self, window_size: int, window_increment: int, feature_set: str | List[str] = "LS9",
                  model: str = "LDA", classifier_path: Optional[str] = None):
         self.__window_size = window_size
         self.__window_increment = window_increment
@@ -113,9 +113,9 @@ class Processor(ABC):
                 makedirs(dirname(self.classifier_path), exist_ok=True)
             emg.save(self.classifier_path)
 
-            fe.visualize_feature_space(feature_dic=training_features, projection="PCA", classes=train_meta['classes'],
-                                       savedir="data/figs/", normalize=True, test_feature_dic=test_features,
-                                       t_classes=test_meta['classes'])
+            # fe.visualize_feature_space(feature_dic=training_features, projection="PCA", classes=train_meta['classes'],
+            #                            savedir="data/figs/", normalize=True, test_feature_dic=test_features,
+            #                            t_classes=test_meta['classes'])
 
         return OnlineEMGClassifier(offline_classifier=emg, window_size=self.__window_size,
                                    window_increment=self.__window_increment, online_data_handler=self._odh,
@@ -150,7 +150,7 @@ class TRPCProcessor(Processor):
                              from scratch and saved to this path.
     """
 
-    def __init__(self, window_size: int = 100, window_increment: int = 50, feature_set: str | List[str] = "LS9",
+    def __init__(self, window_size: int = 250, window_increment: int = 10, feature_set: str | List[str] = "LS9",
                  model: str = "LDA", classifier_path: Optional[str] = None):
         super().__init__(window_size, window_increment, feature_set, model, classifier_path)
 
