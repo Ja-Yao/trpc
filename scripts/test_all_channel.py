@@ -1,4 +1,4 @@
-from multiprocessing import Process, Lock
+from multiprocessing import Process
 
 from trpc import TRPCProcessor, TRPCStreamer
 from trpc.utils.logger import get_logger
@@ -6,8 +6,7 @@ from trpc.utils.logger import get_logger
 logger = get_logger(__name__)
 
 if __name__ == "__main__":
-    lock = Lock()
-    s = TRPCStreamer(lock)
+    s = TRPCStreamer()
     p = Process(target=s.read_emg, daemon=False)
     processor = TRPCProcessor()
     try:

@@ -1,13 +1,10 @@
-from multiprocessing import Lock
-
 import matplotlib.pyplot as plt
 from matplotlib.dates import date2num
 
 from trpc import TRPCStreamer
 
 if __name__ == "__main__":
-    lock = Lock()
-    streamer = TRPCStreamer(lock)
+    streamer = TRPCStreamer()
     plot_data = streamer.read_emg()
 
     dates = date2num([x['timestamp'] for x in plot_data])
