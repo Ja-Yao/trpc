@@ -28,12 +28,11 @@ class Driver(ABC):
         self._state = "No Movement"
 
     @abstractmethod
-    def execute_command(self, command: Dict[str, str | Callable[[Servo], None]], velocity: float):
+    def execute_command(self, command: Dict[str, str | Callable[[Servo], None]]):
         """Sends the command to the given servo
 
             Args:
                 command: The command to be sent to the servo
-                velocity: The level of contraction intensity, normalized to be within [0, 1]
         """
         pass
 
@@ -54,7 +53,7 @@ class TRPCDriver(Driver):
     def __init__(self, servo_pins: Dict[str, int]):
         super().__init__(servo_pins)
 
-    def execute_command(self, command: Dict[int, Dict[str, str | Callable[[Servo], None]]], velocity: float):
+    def execute_command(self, command: Dict[int, Dict[str, str | Callable[[Servo], None]]]):
         gesture = list(command.keys())[0]
 
         servo: Servo = self._servos.get(command.get(gesture).get('servo'))

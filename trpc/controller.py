@@ -99,9 +99,9 @@ class Controller:
         while True:
             try:
                 data, addr = self._classifier_output_socket.recvfrom(1024)  # Receive up to 1024 bytes
-                gesture_class, velocity, timestamp = data.decode().split()  # Decode the received bytes
+                gesture_class, timestamp = data.decode().split()  # Decode the received bytes
                 if int(gesture_class) in self._gestures.keys():
-                    self._driver.execute_command({gesture_class: self._gestures[int(gesture_class)]}, velocity)
+                    self._driver.execute_command({gesture_class: self._gestures[int(gesture_class)]})
             except KeyboardInterrupt:
                 logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
                 break
