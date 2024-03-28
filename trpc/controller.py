@@ -36,17 +36,14 @@ class Controller:
         if not gestures:
             gestures = {
                 0: {
-                    "gesture": "Hand Open",
                     "servo": "Servo 1",
                     "action": Servo.max
                 },
                 1: {
-                    "gesture": "Hand Close",
                     "servo": "Servo 1",
                     "action": Servo.min
                 },
                 2: {
-                    "gesture": "No Movement",
                     "servo": "Servo 1",
                     "action": Servo.mid
                 }
@@ -64,7 +61,7 @@ class Controller:
         self._gestures = gestures
         self._streamer = streamer
         self._classifier = classifier
-        self._driver = TRPCDriver(servo_pins=pins, gestures=self._gestures)
+        self._driver = TRPCDriver(servo_pins=pins)
         self._streamer_process = multiprocessing.Process(target=self._streamer.read_emg)
 
     @property
@@ -104,7 +101,7 @@ class Controller:
                 data, addr = self._classifier_output_socket.recvfrom(1024)  # Receive up to 1024 bytes
                 gesture_class, velocity, timestamp = data.decode().split()  # Decode the received bytes
                 if int(gesture_class) in self._gestures.keys():
-                    self._driver.execute_command(self._gestures[int(gesture_class)], velocity)
+                    self._driver.execute_command({gesture_class: self._gestures[int(gesture_class)]}, velocity)
             except KeyboardInterrupt:
                 logger.info("Detected keyboard interrupt. Stopping controller and subordinates...")
                 break

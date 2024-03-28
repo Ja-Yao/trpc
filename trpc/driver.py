@@ -15,18 +15,13 @@ class Driver(ABC):
 
         Args:
             servo_pins: Dictionary of servo number and corresponding pins
-            gestures: Dictionary of gesture number and corresponding command
     """
 
-    def __init__(self, servo_pins: Dict[str, int], gestures: Dict[int, Dict[str, int | str]]):
+    def __init__(self, servo_pins: Dict[str, int]):
         if not isinstance(servo_pins, dict):
             raise ValueError(f"Invalid servo_pins: {servo_pins}")
 
-        if not isinstance(gestures, dict):
-            raise ValueError(f"Invalid gestures: {gestures}")
-
         self._servo_pins = servo_pins
-        self._gestures = gestures
 
         pin_factory = PiGPIOFactory()
         self._servos = {servo: Servo(pin=pin, pin_factory=pin_factory) for servo, pin in self._servo_pins.items()}
@@ -54,16 +49,16 @@ class TRPCDriver(Driver):
 
         Args:
             servo_pins: Dictionary of servo number and corresponding pins
-            gestures: Dictionary of gesture number and corresponding command
     """
 
-    def __init__(self, servo_pins: Dict[str, int], gestures: Dict[int, Dict[str, int | str]]):
-        super().__init__(servo_pins, gestures)
+    def __init__(self, servo_pins: Dict[str, int]):
+        super().__init__(servo_pins)
 
-    def execute_command(self, command: Dict[str, str | Callable[[Servo], None]], velocity: float):
-        gesture = command.get("gesture")
-        servo: Servo = self._servos.get(command.get('servo'))
-        action: Callable[[Servo], None] = command.get("action")
+    def execute_command(self, command: Dict[int, Dict[str, str | Callable[[Servo], None]]], velocity: float):
+        gesture = list(command.keys())[0]
+
+        servo: Servo = self._servos.get(command.get(gesture).get('servo'))
+        action: Callable[[Servo], None] = command.get(gesture).get("action")
 
         if gesture == self._state:
             return
