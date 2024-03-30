@@ -33,7 +33,9 @@ class Processor(ABC):
         self._feature_set = feature_set
         self._model = model
         if classifier_path is None:
-            self.classifier_path = f"classifiers/{model.lower()}.pickle"
+            self._classifier_path = f"classifiers/{model.lower()}.pickle"
+        else:
+            self._classifier_path = classifier_path
 
         # The handler listens to UDP port 12345 by default, with ip address 127.0.0.1.
         # No need to specify these parameters unless we need to change them.
@@ -73,7 +75,7 @@ class Processor(ABC):
             else self._feature_set
 
         try:
-            emg = EMGClassifier.from_file(self.classifier_path)
+            emg = EMGClassifier.from_file(self._classifier_path)
             logger.info("Loaded classifier from file")
         except FileNotFoundError:
             logger.info("Classifier not found. Training classifier from scratch...")
@@ -109,9 +111,9 @@ class Processor(ABC):
             emg.add_rejection(0.8)
             emg.fit(model=self._model, feature_dictionary=data_set)
 
-            if not exists(self.classifier_path):
-                makedirs(dirname(self.classifier_path), exist_ok=True)
-            emg.save(self.classifier_path)
+            if not exists(self._classifier_path):
+                makedirs(dirname(self._classifier_path), exist_ok=True)
+            emg.save(self._classifier_path)
 
             # fe.visualize_feature_space(feature_dic=training_features, projection="PCA", classes=train_meta['classes'],
             #                            savedir="data/figs/", normalize=True, test_feature_dic=test_features,
