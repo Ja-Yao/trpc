@@ -21,12 +21,13 @@ dependencies = [
     "libemg",
     "gpiozero",
     "pigpio",
+    "PyWavelets",
+    "bluepy",
+    "ADS1x15"
 ]
 
 [project.optional-dependencies]
 dev = [
-    "PyWavelets",
-    "bluepy",
     "alive-progress",
 ]
 
